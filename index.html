@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>فۆڕمی داواکاریی کار — ڕوخاس</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'RX Arabic';font-weight:400;font-style:normal;font-display:swap;src:url(NRT-Regular.ttf) format('truetype');}
+@font-face{font-family:'RX Arabic';font-weight:700;font-style:normal;font-display:swap;src:url(NRT-Bold.ttf) format('truetype');}
+</style>
+<style>
+  /* RUXAS tokens (studio/src/tokens.css) */
+  :root {
+    --red: #CF2727; --red-700: #991B1B; --red-tint: #FEF2F2;
+    --charcoal: #111827; --ink: #030712; --muted: #6B7280; --border: #E5E7EB; --offwhite: #F9FAFB;
+    --success: #10B981; --error: #EF4444;
+    --stack: 'RX Arabic', 'Noto Sans Arabic', system-ui, sans-serif;
+    --r-lg: 16px; --r-md: 12px; --r-sm: 8px;
+  }
+  * { box-sizing: border-box; }
+  html { font-family: var(--stack); }
+  body { margin: 0; background: var(--offwhite); color: var(--charcoal); font-size: 16px; line-height: 1.7; direction: rtl; text-align: right; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 16px 16px 48px; }
+
+  header.head { display: flex; align-items: center; gap: 14px; padding: 8px 0 14px; }
+  .logo { width: 56px; height: 56px; flex: none; }
+  .head h1 { margin: 0; font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+  .brand-line { color: var(--muted); font-size: 14px; }
+  .num { direction: ltr; unicode-bidi: isolate; }
+  .bar { height: 4px; background: var(--red); border-radius: 2px; margin-bottom: 14px; }
+  .intro { margin: 0 0 16px; color: var(--charcoal); }
+  .req { color: var(--red); }
+
+  section.card { background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; margin-bottom: 14px; }
+  .card h2 { margin: 0 0 12px; font-size: 17px; font-weight: 700; color: var(--red-700); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .fields { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 560px) { .fields { grid-template-columns: 1fr 1fr; } .field.wide { grid-column: 1 / -1; } }
+
+  .field label.k, .field .k { display: block; font-weight: 700; font-size: 15px; margin-bottom: 6px; color: var(--ink); }
+  .hint { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  input[type=text], input[type=tel], input[type=date] {
+    width: 100%; font: inherit; color: var(--charcoal); background: #fff;
+    border: 1px solid var(--border); border-radius: var(--r-sm); padding: 10px 12px; min-height: 46px;
+  }
+  input[type=date], input[inputmode=numeric], input[type=tel] { direction: ltr; text-align: left; }
+  input:focus { outline: 2px solid var(--red); outline-offset: 1px; border-color: var(--red); }
+  .field.invalid input, .field.invalid .pills { border-color: var(--error); }
+  .err { display: none; color: var(--error); font-size: 13px; margin-top: 4px; }
+  .field.invalid .err { display: block; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; border: 1px solid transparent; border-radius: var(--r-sm); }
+  .pill { position: relative; }
+  .pill input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .pill span { display: inline-block; padding: 9px 16px; border: 1px solid var(--border); border-radius: 999px; background: #fff; min-height: 44px; line-height: 24px; }
+  .pill input:checked + span { background: var(--red-tint); border-color: var(--red); color: var(--red-700); font-weight: 700; }
+  .pill input:focus-visible + span { outline: 2px solid var(--red); outline-offset: 1px; }
+
+  table.grid { width: 100%; border-collapse: collapse; }
+  .grid th, .grid td { padding: 10px 6px; border-bottom: 1px solid var(--border); text-align: center; }
+  .grid th:first-child, .grid td:first-child { text-align: right; font-weight: 700; }
+  .grid thead th { color: var(--muted); font-weight: 700; font-size: 14px; }
+  .grid input[type=radio] { width: 22px; height: 22px; accent-color: var(--red); cursor: pointer; }
+
+  .actions { margin-top: 8px; }
+  button.submit { width: 100%; font: inherit; font-weight: 700; font-size: 18px; color: #fff; background: var(--red);
+    border: 0; border-radius: var(--r-md); padding: 14px; min-height: 52px; cursor: pointer; }
+  button.submit:disabled { opacity: .6; cursor: default; }
+  .fail { display: none; margin-top: 12px; padding: 12px 14px; background: #FEF2F2; border: 1px solid var(--error); border-radius: var(--r-sm); color: var(--red-700); }
+
+  .done { display: none; text-align: center; padding: 48px 16px; }
+  .done .tick { width: 64px; height: 64px; border-radius: 50%; background: var(--success); color: #fff; font-size: 36px; line-height: 64px; margin: 0 auto 16px; }
+  .done h2 { margin: 0 0 6px; color: var(--ink); }
+  .done p { margin: 0; color: var(--muted); }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  footer.foot { text-align: center; color: var(--muted); font-size: 13px; margin-top: 24px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="head">
+    <svg class="logo" viewBox="0 0 160.28529 160.39954" role="img" aria-label="RUXAS"><g transform="translate(5951.648,2386.7721)"><path fill="#CF2727" d="m -5875.1798,-2226.4484 c -14.0389,-0.8191 -26.9707,-4.8293 -38.4458,-11.9223 -10.4741,-6.4742 -19.5934,-15.5913 -26.0587,-26.0522 -10.8263,-17.5173 -14.4648,-38.3487 -10.2603,-58.7427 2.1981,-10.6619 6.9821,-21.4496 13.4756,-30.387 21.7158,-29.8889 60.5146,-41.1186 94.8913,-27.4647 23.4034,9.2955 41.5376,29.9715 47.758,54.4522 1.7409,6.851 2.4555,12.6235 2.4567,19.8437 0,13.0663 -2.6861,24.5596 -8.4222,36.0065 -10.3731,20.7007 -28.8451,35.6905 -51.4498,41.7508 -6.6352,1.7789 -17.3244,2.9019 -23.9448,2.5157 z m -58.2505,-66.0516 c 0.095,-2.0737 0.1734,-4.6038 0.1745,-5.6224 0,-3.3122 0.064,-3.3581 9.6573,-7.2841 7.4282,-3.04 7.6483,-3.1704 8.6521,-5.1284 0.8213,-1.6019 0.5988,-4.2889 -0.4639,-5.6018 -0.9114,-1.1261 -4.1077,-3.1174 -9.7757,-6.0904 -3.7071,-1.9444 -4.0735,-2.0807 -5.5563,-2.0659 -1.2816,0.013 -6.0045,1.1306 -6.3852,1.5114 -0.048,0.048 3.2656,1.9255 7.3646,4.1715 9.43,5.167 9.4716,5.1965 9.4716,6.7017 0,0.715 -0.1775,1.3741 -0.463,1.7189 -0.2744,0.3315 -3.4735,1.7965 -7.8548,3.5971 -8.911,3.6621 -9.714,4.0502 -10.1329,4.8981 -0.2235,0.4523 -0.3281,2.2174 -0.3308,5.5814 0,4.3537 0.049,4.9678 0.4592,5.3363 0.4578,0.4116 4.1617,2.0067 4.7213,2.0332 0.1892,0.01 0.3494,-1.2937 0.462,-3.7566 z m 38.515,2.7399 c 4.3475,-1.3531 7.5986,-5.1057 8.6201,-9.9498 0.3081,-1.4609 0.3916,-4.1854 0.3952,-12.8985 v -11.0463 h -1.7051 c -1.4209,0 -1.8287,0.1064 -2.4474,0.6385 l -0.7423,0.6385 -0.1928,10.2698 c -0.2144,11.423 -0.2892,11.9547 -2.0303,14.4469 -1.3667,1.9562 -3.1531,2.8459 -5.7144,2.8459 -3.3732,0 -5.6877,-1.7198 -7.0213,-5.217 -0.5584,-1.4643 -0.5893,-2.0033 -0.7206,-12.5763 l -0.1371,-11.0463 h -1.9014 c -1.6619,0 -1.976,0.08 -2.4946,0.6314 l -0.5932,0.6315 0.096,11.3409 c 0.1053,12.3798 0.069,12.065 1.7921,15.443 0.8072,1.5822 3.1594,3.996 4.7239,4.8475 2.8115,1.5303 7.0215,1.9485 10.0682,1.0003 z m 85.2776,-0.353 c 1.9922,-0.9169 3.9941,-2.8244 4.9,-4.6691 0.6694,-1.3631 0.7308,-1.7438 0.7308,-4.5308 0,-2.6413 -0.083,-3.2273 -0.6322,-4.4418 -1.1953,-2.6452 -3.938,-4.3918 -9.8188,-6.2529 -5.0706,-1.6046 -6.1988,-2.5234 -6.1988,-5.0481 0,-3.5852 3.5569,-4.9847 8.8269,-3.473 2.7647,0.793 3.9518,0.8633 5.0443,0.2983 0.6749,-0.349 2.1172,-1.9221 2.1172,-2.3093 0,-0.3425 -3.6105,-2.4504 -5.2317,-3.0543 -2.6134,-0.9736 -6.9834,-1.1383 -9.4969,-0.358 -4.613,1.4321 -6.9319,4.9723 -6.6377,10.1335 0.1607,2.8176 0.99,4.7444 2.6631,6.1875 1.5647,1.3495 2.6552,1.8587 7.4534,3.4801 2.3256,0.7859 4.6302,1.7354 5.1213,2.11 2.264,1.7268 2.0157,5.2588 -0.4678,6.6546 -2.846,1.5996 -7.9991,0.6561 -12.2648,-2.2455 -0.9875,-0.6716 -1.8595,-1.1571 -1.938,-1.0786 -0.078,0.078 -0.2104,1.2802 -0.2934,2.6708 l -0.1508,2.5282 0.8198,0.7658 c 1.0082,0.9418 4.1786,2.5318 6.136,3.0772 1.0306,0.2871 2.3815,0.383 4.6302,0.3286 2.773,-0.067 3.3665,-0.1651 4.6879,-0.7732 z m -106.7377,-0.2195 c 1.4849,-0.8516 1.8227,-1.2966 1.4641,-1.9287 -0.2773,-0.4888 -8.8962,-10.5355 -9.3851,-10.9399 -0.2739,-0.2266 -0.7412,-0.1431 -1.9466,0.3479 -2.4685,1.0054 -2.5001,1.0943 -1.0338,2.9091 4.8561,6.0101 8.8249,10.4278 9.3595,10.4183 0.077,0 0.7706,-0.3644 1.5419,-0.8067 z m 36.6977,0.65 c 0.3446,-0.099 1.6797,-2.1244 3.8281,-5.8076 1.8144,-3.1107 3.4957,-5.9167 3.7363,-6.2356 0.4281,-0.5675 0.5145,-0.45 4.1049,5.5767 2.5395,4.2628 3.8574,6.2286 4.2846,6.3911 0.9982,0.3795 10.4575,0.2964 10.9531,-0.096 0.2296,-0.1819 0.6619,-1.0006 0.9607,-1.8194 1.7489,-4.7933 9.6448,-24.3082 9.8352,-24.3082 0.2098,0 1.1569,2.3304 7.9737,19.6204 1.2999,3.297 2.5466,6.1465 2.7705,6.3323 0.5654,0.4693 4.7313,0.6737 4.9962,0.2452 0.1152,-0.1864 -2.5789,-7.4201 -6.3675,-17.097 l -6.5671,-16.7738 h -2.5873 c -3.0117,0 -2.8128,-0.1588 -4.3593,3.4804 -0.7428,1.7478 -10.9011,27.4809 -11.6875,29.6069 -0.1522,0.4114 -1.2503,-1.2516 -5.1909,-7.8612 -2.7489,-4.6106 -4.9979,-8.522 -4.9979,-8.6919 0,-0.17 2.1034,-3.9057 4.6743,-8.3015 2.5708,-4.3959 4.6743,-8.0466 4.6743,-8.1126 0,-0.066 -1.2874,-0.1201 -2.861,-0.1201 -2.778,0 -2.8808,0.021 -3.5481,0.7276 -0.3779,0.4002 -1.9009,2.7493 -3.3843,5.2202 -1.4835,2.4709 -2.8477,4.7073 -3.0316,4.9699 -0.296,0.4227 -0.7227,-0.1749 -3.7276,-5.2202 l -3.3933,-5.6975 h -3.1239 c -1.7182,0 -3.124,0.049 -3.124,0.1091 0,0.06 1.9142,3.4089 4.2537,7.442 2.3395,4.033 4.4408,7.7254 4.6696,8.2052 0.4786,1.0035 0.7113,0.5454 -6.1099,12.0249 -1.9456,3.2743 -3.4865,6.0425 -3.4244,6.1516 0.1316,0.2309 4.9877,0.264 5.7704,0.039 z"/></g></svg>
+    <div>
+      <h1 id="title"></h1>
+      <div class="brand-line"><span id="brand"></span> · <span class="num" id="phone"></span></div>
+    </div>
+  </header>
+  <div class="bar"></div>
+
+  <form id="form" novalidate>
+    <p class="intro" id="intro"></p>
+    <div id="sections"></div>
+    <div class="hp" aria-hidden="true"><label>website <input type="text" name="_hp" tabindex="-1" autocomplete="off"></label></div>
+    <div class="actions">
+      <button type="submit" class="submit" id="submitBtn"></button>
+      <div class="fail" id="fail"></div>
+    </div>
+  </form>
+
+  <div class="done" id="done">
+    <div class="tick">✓</div>
+    <h2 id="thanksTitle"></h2>
+    <p id="thanksBody"></p>
+  </div>
+
+  <footer class="foot"><span id="brandFoot"></span> · <span class="num" id="phoneFoot"></span></footer>
+</div>
+
+<script>
+  var CFG = {"sections":[{"title":"زانیاری کەسی","fields":[{"key":"fullName","label":"ناوی تەواو","type":"text","required":true},{"key":"gender","label":"ڕەگەز","type":"choice","options":["نێر","مێ"],"required":true},{"key":"dob","label":"بەرواری لەدایکبوون","type":"date"},{"key":"phone","label":"ژمارەی مۆبایل","type":"tel","required":true},{"key":"phone2","label":"مۆبایلی دووەم","type":"tel"},{"key":"nationalId","label":"ژمارەی نیشتیمانی","type":"text"},{"key":"address","label":"ناونیشانی نیشتەجێبوون","type":"text","wide":true}]},{"title":"ژیان و تەندروستی","fields":[{"key":"marital","label":"باری خێزانی","type":"choice","options":["هاوسەردار","بێ هاوسەر"]},{"key":"familyMembers","label":"ژمارەی ئەندامانی خێزان","type":"number"},{"key":"financial","label":"باری دارایی","type":"choice","options":["زۆر باش","باش","لاواز"]},{"key":"residence","label":"جۆری نیشتەجێبوون","type":"choice","options":["بەکرێنشین","خاوەن موڵک"]},{"key":"vehicleOwner","label":"خاوەنی ئۆتۆمبێل","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"driverLicense","label":"مۆڵەتی شۆفێری هەیە","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"height","label":"باڵا (سم)","type":"number"},{"key":"weight","label":"کێش (کگ)","type":"number"},{"key":"glasses","label":"چاویلکە بەکاردەهێنێت","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"illness","label":"نەخۆشی / بارودۆخی تەندروستی","type":"text","wide":true,"hint":"ئەگەر هیچ نەخۆشییەکت نییە، بنووسە \"نییە\"."}]},{"title":"خوێندن","fields":[{"key":"degree","label":"بڕوانامە","type":"choice","options":["قوتابخانەی سەرەتایی","ئامادەیی","دیپلۆم","بەکالۆریۆس"]},{"key":"educationStage","label":"قۆناغی خوێندن","type":"text"},{"key":"graduationYear","label":"ساڵی دەرچوون","type":"number"},{"key":"schoolName","label":"ناوی قوتابخانە","type":"text","wide":true}]},{"title":"زمانەکان","fields":[{"key":"languages","label":"زمانەکان","type":"grid","columns":["زۆر باش","باش","لاواز"],"rows":[{"key":"langKurdish","label":"کوردی"},{"key":"langArabic","label":"عەرەبی"},{"key":"langEnglish","label":"ئینگلیزی"}]},{"key":"otherLanguages","label":"زمانەکانی تر","type":"text","wide":true}]},{"title":"ئەزموونی کار ١","fields":[{"key":"exp1Title","label":"ناوی پیشە","type":"text"},{"key":"exp1Company","label":"ناوی کۆمپانیا","type":"text"},{"key":"exp1Duration","label":"ماوە","type":"text"},{"key":"exp1Salary","label":"مووچە","type":"text"},{"key":"exp1Reason","label":"هۆکاری بەجێهێشتن","type":"text","wide":true}]},{"title":"ئەزموونی کار ٢","fields":[{"key":"exp2Title","label":"ناوی پیشە","type":"text"},{"key":"exp2Company","label":"ناوی کۆمپانیا","type":"text"},{"key":"exp2Duration","label":"ماوە","type":"text"},{"key":"exp2Salary","label":"مووچە","type":"text"},{"key":"exp2Reason","label":"هۆکاری بەجێهێشتن","type":"text","wide":true}]},{"title":"زانیاریی کار","fields":[{"key":"startDate","label":"بەرواری دەستپێکردنی کار","type":"date"},{"key":"expectedSalary","label":"مووچەی چاوەڕوانکراو","type":"text"},{"key":"travelMethod","label":"ڕێگای هاتووچۆ","type":"text"},{"key":"travelCost","label":"تێچووی هاتووچۆ","type":"text"}]}],"ui":{"intro":"تکایە هەموو بەشەکانی ئەم فۆڕمە پڕ بکەرەوە. ئەو خانانەی نیشانەی * یان هەیە پێویستن.","submit":"ناردن","sending":"دەنێردرێت…","thanksTitle":"سوپاس، داواکاریت وەرگیرا.","thanksBody":"ڕوخاس بە زووترین کات پەیوەندیت پێوە دەکات.","requiredMsg":"تکایە ئەم خانەیە پڕ بکەرەوە.","numberMsg":"تکایە تەنها ژمارە بنووسە.","failMsg":"ببورە، هەڵەیەک ڕوویدا و داواکارییەکە نەنێردرا. تکایە دووبارە هەوڵ بدەرەوە، یان پەیوەندی بکە بە 0750 600 3737.","timestamp":"بەروار و کات"},"title":"فۆڕمی داواکاریی کار","brand":"ڕوخاس","phone":"0750 600 3737","endpoint":"https://script.google.com/macros/s/AKfycbwx_sDOkD_S4VN9VzsbL1Jvx_kzuI-2stPm3HNLDHvv7N19L5fKvupOutQXpXmuW5YM/exec"};
+  var UI = CFG.ui;
+
+  function el(tag, attrs, children) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      if (k === 'text') e.textContent = attrs[k]; else if (k === 'html') e.innerHTML = attrs[k]; else e.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(function (c) { if (c) e.appendChild(c); });
+    return e;
+  }
+  function labelNode(f) {
+    var k = el('span', { class: 'k', id: 'lbl-' + f.key, text: f.label });
+    if (f.required) k.appendChild(el('span', { class: 'req', text: ' *' }));
+    return k;
+  }
+  function textField(f) {
+    var type = f.type === 'tel' ? 'tel' : f.type === 'date' ? 'date' : 'text';
+    var input = el('input', { type: type, name: f.key, id: 'in-' + f.key, autocomplete: 'off' });
+    if (f.type === 'number') { input.setAttribute('inputmode', 'numeric'); }
+    if (f.type === 'tel') { input.setAttribute('inputmode', 'tel'); }
+    var lbl = el('label', { class: 'k', for: 'in-' + f.key, text: f.label });
+    if (f.required) lbl.appendChild(el('span', { class: 'req', text: ' *' }));
+    return el('div', { class: 'field' + (f.wide ? ' wide' : ''), 'data-key': f.key }, [
+      lbl, input, f.hint ? el('div', { class: 'hint', text: f.hint }) : null, el('div', { class: 'err' }),
+    ]);
+  }
+  function choiceField(f) {
+    var pills = el('div', { class: 'pills', role: 'radiogroup', 'aria-labelledby': 'lbl-' + f.key },
+      f.options.map(function (opt) {
+        return el('label', { class: 'pill' }, [el('input', { type: 'radio', name: f.key, value: opt }), el('span', { text: opt })]);
+      }));
+    return el('div', { class: 'field' + (f.options.length > 2 ? ' wide' : ''), 'data-key': f.key }, [labelNode(f), pills, el('div', { class: 'err' })]);
+  }
+  function gridField(f) {
+    var thead = el('thead', {}, [el('tr', {}, [el('th', { text: '' })].concat(f.columns.map(function (c) { return el('th', { text: c }); })))]);
+    var tbody = el('tbody', {}, f.rows.map(function (r) {
+      return el('tr', {}, [el('td', { text: r.label })].concat(f.columns.map(function (c) {
+        return el('td', {}, [el('input', { type: 'radio', name: r.key, value: c, 'aria-label': r.label + ' — ' + c })]);
+      })));
+    }));
+    return el('div', { class: 'field wide', 'data-key': f.key }, [el('table', { class: 'grid' }, [thead, tbody])]);
+  }
+  function render() {
+    document.getElementById('title').textContent = CFG.title;
+    ['brand', 'brandFoot'].forEach(function (id) { document.getElementById(id).textContent = CFG.brand; });
+    ['phone', 'phoneFoot'].forEach(function (id) { document.getElementById(id).textContent = CFG.phone; });
+    document.getElementById('intro').textContent = UI.intro;
+    document.getElementById('submitBtn').textContent = UI.submit;
+    document.getElementById('thanksTitle').textContent = UI.thanksTitle;
+    document.getElementById('thanksBody').textContent = UI.thanksBody;
+    var host = document.getElementById('sections');
+    CFG.sections.forEach(function (sec) {
+      var fields = el('div', { class: 'fields' }, sec.fields.map(function (f) {
+        return f.type === 'grid' ? gridField(f) : f.type === 'choice' ? choiceField(f) : textField(f);
+      }));
+      host.appendChild(el('section', { class: 'card' }, [el('h2', { text: sec.title }), fields]));
+    });
+  }
+
+  function collect() {
+    var data = {};
+    var fd = new FormData(document.getElementById('form'));
+    fd.forEach(function (v, k) { data[k] = v; });
+    return data;
+  }
+  function flag(key, msg) {
+    var box = document.querySelector('.field[data-key="' + key + '"]');
+    if (!box) return;
+    box.classList.add('invalid');
+    box.querySelector('.err').textContent = msg;
+  }
+  function validate(data) {
+    document.querySelectorAll('.field.invalid').forEach(function (b) { b.classList.remove('invalid'); });
+    var first = null;
+    CFG.sections.forEach(function (sec) {
+      sec.fields.forEach(function (f) {
+        if (f.type === 'grid') return;
+        var v = (data[f.key] || '').trim();
+        var bad = null;
+        if (f.required && !v) bad = UI.requiredMsg;
+        else if (f.type === 'number' && v && !/^[0-9٠-٩۰-۹,\s]{1,9}$/.test(v)) bad = UI.numberMsg;
+        if (bad) { flag(f.key, bad); first = first || f.key; }
+      });
+    });
+    return first;
+  }
+
+  document.getElementById('form').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var data = collect();
+    var firstBad = validate(data);
+    var fail = document.getElementById('fail');
+    fail.style.display = 'none';
+    if (firstBad) {
+      document.querySelector('.field[data-key="' + firstBad + '"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.textContent = UI.sending;
+    var finish = function (res) {
+      if (res && res.ok) {
+        document.getElementById('form').style.display = 'none';
+        document.getElementById('done').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        btn.disabled = false; btn.textContent = UI.submit;
+        fail.textContent = UI.failMsg; fail.style.display = 'block';
+      }
+    };
+    if (CFG.endpoint) {
+      // Static hosting: POST JSON as text/plain (no preflight) to the Apps Script web app.
+      fetch(CFG.endpoint, { method: 'POST', mode: 'cors', redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
+        .then(function (r) { return r.json(); }).then(finish).catch(function () { finish(null); });
+    } else {
+      google.script.run.withSuccessHandler(finish).withFailureHandler(function () { finish(null); }).submit(data);
+    }
+  });
+
+  render();
+</script>
+</body>
+</html>
