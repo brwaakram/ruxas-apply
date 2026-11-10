@@ -94,7 +94,8 @@
   .done .tick { width: 64px; height: 64px; border-radius: 50%; background: var(--success); color: #fff; font-size: 36px; line-height: 64px; margin: 0 auto 16px; }
   .done h2 { margin: 0 0 6px; color: var(--ink); }
   .done p { margin: 0; color: var(--muted); }
-  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  /* Honeypot: clipped in place. An off-screen offset to the left makes a right-to-left page scroll sideways. */
+  .hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   footer.foot { text-align: center; color: var(--muted); font-size: 13px; margin-top: 24px; }
 </style>
 </head>
