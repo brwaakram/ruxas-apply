@@ -34,6 +34,13 @@
   .bar { height: 4px; background: var(--red); border-radius: 2px; margin-bottom: 14px; }
   .intro { margin: 0 0 16px; color: var(--charcoal); }
   .req { color: var(--red); }
+  .opt { color: var(--muted); font-weight: 400; font-size: 13px; }
+
+  section.card.about { border-color: var(--red); background: var(--red-tint); }
+  .card.about h2 { border-bottom: 0; padding-bottom: 0; margin-bottom: 6px; }
+  .card.about h2:not(:first-child) { margin-top: 14px; }
+  .about ul { margin: 0; padding: 0 20px 0 0; }
+  .about p { margin: 0; }
 
   section.card { background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; margin-bottom: 14px; }
   .card h2 { margin: 0 0 12px; font-size: 17px; font-weight: 700; color: var(--red-700); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
@@ -48,11 +55,23 @@
   }
   input[type=date], input[inputmode=numeric], input[type=tel] { direction: ltr; text-align: left; }
   input:focus { outline: 2px solid var(--red); outline-offset: 1px; border-color: var(--red); }
-  .field.invalid input, .field.invalid .pills { border-color: var(--error); }
+  input[type=file] { width: 100%; font: inherit; font-size: 14px; color: var(--charcoal); background: #fff;
+    border: 1px dashed var(--border); border-radius: var(--r-sm); padding: 10px 12px; min-height: 46px; }
+  .field.skipped { display: none; }
+  label.none { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-weight: 700; cursor: pointer; min-height: 44px; }
+  label.none input { width: 22px; height: 22px; accent-color: var(--red); flex: none; margin: 0; }
+
+  /* Unfilled required fields after a submit attempt */
+  .field.invalid input[type=text], .field.invalid input[type=tel], .field.invalid input[type=date], .field.invalid input[type=file] {
+    border-color: var(--error); box-shadow: 0 0 0 1px var(--error); background: var(--red-tint); }
+  .field.invalid .pills { border-color: var(--error); box-shadow: 0 0 0 1px var(--error); background: var(--red-tint); }
+  .field.invalid label.k, .field.invalid .k { color: var(--error); }
+  .grid tr.invalid td { background: var(--red-tint); color: var(--error); }
+  .grid tr.invalid td:first-child { box-shadow: inset -3px 0 0 var(--error); }
   .err { display: none; color: var(--error); font-size: 13px; margin-top: 4px; }
   .field.invalid .err { display: block; }
 
-  .pills { display: flex; flex-wrap: wrap; gap: 8px; border: 1px solid transparent; border-radius: var(--r-sm); }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; border: 1px solid transparent; border-radius: var(--r-md); padding: 4px; margin: -4px; }
   .pill { position: relative; }
   .pill input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
   .pill span { display: inline-block; padding: 9px 16px; border: 1px solid var(--border); border-radius: 999px; background: #fff; min-height: 44px; line-height: 24px; }
@@ -69,7 +88,7 @@
   button.submit { width: 100%; font: inherit; font-weight: 700; font-size: 18px; color: #fff; background: var(--red);
     border: 0; border-radius: var(--r-md); padding: 14px; min-height: 52px; cursor: pointer; }
   button.submit:disabled { opacity: .6; cursor: default; }
-  .fail { display: none; margin-top: 12px; padding: 12px 14px; background: #FEF2F2; border: 1px solid var(--error); border-radius: var(--r-sm); color: var(--red-700); }
+  .fail { display: none; margin-top: 12px; font-weight: 700; padding: 12px 14px; background: #FEF2F2; border: 1px solid var(--error); border-radius: var(--r-sm); color: var(--red-700); }
 
   .done { display: none; text-align: center; padding: 48px 16px; }
   .done .tick { width: 64px; height: 64px; border-radius: 50%; background: var(--success); color: #fff; font-size: 36px; line-height: 64px; margin: 0 auto 16px; }
@@ -91,6 +110,7 @@
   <div class="bar"></div>
 
   <form id="form" novalidate>
+    <section class="card about" id="about"></section>
     <p class="intro" id="intro"></p>
     <div id="sections"></div>
     <div class="hp" aria-hidden="true"><label>website <input type="text" name="_hp" tabindex="-1" autocomplete="off"></label></div>
@@ -110,7 +130,7 @@
 </div>
 
 <script>
-  var CFG = {"sections":[{"title":"زانیاری کەسی","fields":[{"key":"fullName","label":"ناوی تەواو","type":"text","required":true},{"key":"gender","label":"ڕەگەز","type":"choice","options":["نێر","مێ"],"required":true},{"key":"dob","label":"بەرواری لەدایکبوون","type":"date"},{"key":"phone","label":"ژمارەی مۆبایل","type":"tel","required":true},{"key":"phone2","label":"مۆبایلی دووەم","type":"tel"},{"key":"address","label":"ناونیشانی نیشتەجێبوون","type":"text","wide":true}]},{"title":"ژیان و تەندروستی","fields":[{"key":"marital","label":"باری خێزانی","type":"choice","options":["هاوسەردار","بێ هاوسەر"]},{"key":"familyMembers","label":"ژمارەی ئەندامانی خێزان","type":"number"},{"key":"financial","label":"باری دارایی","type":"choice","options":["زۆر باش","باش","لاواز"]},{"key":"residence","label":"جۆری نیشتەجێبوون","type":"choice","options":["بەکرێنشین","خاوەن موڵک"]},{"key":"vehicleOwner","label":"خاوەنی ئۆتۆمبێل","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"driverLicense","label":"مۆڵەتی شۆفێری هەیە","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"height","label":"باڵا (سم)","type":"number"},{"key":"weight","label":"کێش (کگ)","type":"number"},{"key":"glasses","label":"چاویلکە بەکاردەهێنێت","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"illness","label":"نەخۆشی / بارودۆخی تەندروستی","type":"text","wide":true,"hint":"ئەگەر هیچ نەخۆشییەکت نییە، بنووسە \"نییە\"."}]},{"title":"خوێندن","fields":[{"key":"degree","label":"بڕوانامە","type":"choice","options":["قوتابخانەی سەرەتایی","ئامادەیی","دیپلۆم","بەکالۆریۆس"]},{"key":"educationStage","label":"قۆناغی خوێندن","type":"text"},{"key":"graduationYear","label":"ساڵی دەرچوون","type":"number"},{"key":"schoolName","label":"ناوی قوتابخانە","type":"text","wide":true}]},{"title":"زمانەکان","fields":[{"key":"languages","label":"زمانەکان","type":"grid","columns":["زۆر باش","باش","لاواز"],"rows":[{"key":"langKurdish","label":"کوردی"},{"key":"langArabic","label":"عەرەبی"},{"key":"langEnglish","label":"ئینگلیزی"}]},{"key":"otherLanguages","label":"زمانەکانی تر","type":"text","wide":true}]},{"title":"ئەزموونی کار ١","fields":[{"key":"exp1Title","label":"ناوی پیشە","type":"text"},{"key":"exp1Company","label":"ناوی کۆمپانیا","type":"text"},{"key":"exp1Duration","label":"ماوە","type":"text"},{"key":"exp1Salary","label":"مووچە","type":"text"},{"key":"exp1Reason","label":"هۆکاری بەجێهێشتن","type":"text","wide":true}]},{"title":"ئەزموونی کار ٢","fields":[{"key":"exp2Title","label":"ناوی پیشە","type":"text"},{"key":"exp2Company","label":"ناوی کۆمپانیا","type":"text"},{"key":"exp2Duration","label":"ماوە","type":"text"},{"key":"exp2Salary","label":"مووچە","type":"text"},{"key":"exp2Reason","label":"هۆکاری بەجێهێشتن","type":"text","wide":true}]},{"title":"زانیاریی کار","fields":[{"key":"startDate","label":"بەرواری دەستپێکردنی کار","type":"date"},{"key":"expectedSalary","label":"مووچەی چاوەڕوانکراو","type":"text"},{"key":"travelMethod","label":"ڕێگای هاتووچۆ","type":"text"},{"key":"travelCost","label":"تێچووی هاتووچۆ","type":"text"}]}],"ui":{"intro":"تکایە هەموو بەشەکانی ئەم فۆڕمە پڕ بکەرەوە. ئەو خانانەی نیشانەی * یان هەیە پێویستن.","submit":"ناردن","sending":"دەنێردرێت…","thanksTitle":"سوپاس، داواکاریت وەرگیرا.","thanksBody":"ڕوخاس بە زووترین کات پەیوەندیت پێوە دەکات.","requiredMsg":"تکایە ئەم خانەیە پڕ بکەرەوە.","numberMsg":"تکایە تەنها ژمارە بنووسە.","failMsg":"ببورە، هەڵەیەک ڕوویدا و داواکارییەکە نەنێردرا. تکایە دووبارە هەوڵ بدەرەوە، یان پەیوەندی بکە بە 0750 600 3737.","timestamp":"بەروار و کات"},"title":"فۆڕمی داواکاریی کار","brand":"ڕوخاس","phone":"0750 600 3737","endpoint":"https://script.google.com/macros/s/AKfycbwx_sDOkD_S4VN9VzsbL1Jvx_kzuI-2stPm3HNLDHvv7N19L5fKvupOutQXpXmuW5YM/exec"};
+  var CFG = {"sections":[{"title":"کاری داواکراو","fields":[{"key":"position","label":"بۆ کام کار داواکاری دەکەیت؟","type":"choice","options":["پاککردنەوە","گواستنەوە","وەستای مۆبیلیات"],"late":true,"column":"کاری داواکراو"}]},{"title":"زانیاری کەسی","fields":[{"key":"fullName","label":"ناوی تەواو","type":"text"},{"key":"gender","label":"ڕەگەز","type":"choice","options":["نێر","مێ"]},{"key":"dob","label":"بەرواری لەدایکبوون","type":"date"},{"key":"phone","label":"ژمارەی مۆبایل","type":"tel"},{"key":"phone2","label":"مۆبایلی دووەم","type":"tel","optional":true},{"key":"address","label":"ناونیشانی نیشتەجێبوون","type":"text","wide":true}]},{"title":"ژیان و تەندروستی","fields":[{"key":"marital","label":"باری خێزانی","type":"choice","options":["هاوسەردار","بێ هاوسەر"]},{"key":"familyMembers","label":"ژمارەی ئەندامانی خێزان","type":"number"},{"key":"financial","label":"باری دارایی","type":"choice","options":["زۆر باش","باش","لاواز"]},{"key":"residence","label":"جۆری نیشتەجێبوون","type":"choice","options":["بەکرێنشین","خاوەن موڵک"]},{"key":"vehicleOwner","label":"خاوەنی ئۆتۆمبێل","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"driverLicense","label":"مۆڵەتی شۆفێری هەیە","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"height","label":"باڵا (سم)","type":"number"},{"key":"weight","label":"کێش (کگ)","type":"number"},{"key":"glasses","label":"چاویلکە بەکاردەهێنێت","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"illness","label":"نەخۆشی / بارودۆخی تەندروستی","type":"text","wide":true,"hint":"ئەگەر هیچ نەخۆشییەکت نییە، بنووسە \"نییە\"."}]},{"title":"خوێندن","fields":[{"key":"degree","label":"بڕوانامە","type":"choice","options":["نییە","قوتابخانەی سەرەتایی","ئامادەیی","دیپلۆم","بەکالۆریۆس"]},{"key":"educationStage","label":"قۆناغی خوێندن","type":"text","skipIf":{"key":"degree","equals":"نییە"}},{"key":"graduationYear","label":"ساڵی دەرچوون","type":"number","skipIf":{"key":"degree","equals":"نییە"}},{"key":"schoolName","label":"ناوی قوتابخانە","type":"text","wide":true,"skipIf":{"key":"degree","equals":"نییە"}}]},{"title":"زمانەکان","fields":[{"key":"languages","label":"زمانەکان","type":"grid","columns":["زۆر باش","باش","لاواز"],"rows":[{"key":"langKurdish","label":"کوردی"},{"key":"langArabic","label":"عەرەبی"},{"key":"langEnglish","label":"ئینگلیزی"}]},{"key":"otherLanguages","label":"زمانەکانی تر","type":"text","wide":true,"hint":"ئەگەر هیچ زمانێکی تر نازانیت، بنووسە \"نییە\"."}]},{"title":"ئەزموونی کار ١","none":{"key":"exp1None","label":"ئەزموونی کارم نییە","implies":"exp2None"},"fields":[{"key":"exp1Title","label":"ناوی پیشە","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Company","label":"ناوی کۆمپانیا","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Duration","label":"ماوە","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Salary","label":"مووچە","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Reason","label":"هۆکاری بەجێهێشتن","type":"text","wide":true,"skipIf":{"key":"exp1None","equals":"1"}}]},{"title":"ئەزموونی کار ٢","none":{"key":"exp2None","label":"ئەزموونی کاری دووەمم نییە"},"fields":[{"key":"exp2Title","label":"ناوی پیشە","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Company","label":"ناوی کۆمپانیا","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Duration","label":"ماوە","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Salary","label":"مووچە","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Reason","label":"هۆکاری بەجێهێشتن","type":"text","wide":true,"skipIf":{"key":"exp2None","equals":"1"}}]},{"title":"زانیاریی کار","fields":[{"key":"startDate","label":"بەرواری دەستپێکردنی کار","type":"date"},{"key":"expectedSalary","label":"مووچەی چاوەڕوانکراو","type":"text"},{"key":"travelMethod","label":"ڕێگای هاتووچۆ","type":"text"},{"key":"travelCost","label":"تێچووی هاتووچۆ","type":"text"}]},{"title":"سیڤی","fields":[{"key":"cv","label":"هاوپێچکردنی سیڤی","type":"file","optional":true,"wide":true,"late":true,"column":"سیڤی","hint":"ئەگەر سیڤیت هەیە، لێرە هاوپێچی بکە — PDF، Word یان وێنە، تا 5 مێگابایت."}]}],"ui":{"about":{"rolesTitle":"ئەم هەلی کارە بۆ کێیە؟","roles":["کارمەندی پاککردنەوە و گواستنەوە","وەستای شارەزا لە هەڵوەشاندن و بەستنەوەی مۆبیلیاتی ماڵ و ئۆفیس"],"salaryTitle":"مووچە","salary":"مووچە لە 500,000 دیناری عێراقی دەست پێدەکات و بەپێی لێهاتوویی و توانای هەر کەسێک زیاد دەکات. مووچەی وەستا شارەزاکان بەپێی شارەزایی و تواناکانیان دیاری دەکرێت."},"intro":"تکایە هەموو خانەکان پڕ بکەرەوە. هەموویان پێویستن، تەنها مۆبایلی دووەم نەبێت. ئەگەر خانەیەک بۆ تۆ ناگونجێت، بنووسە \"نییە\".","optional":"ئارەزوومەندانە","submit":"ناردن","sending":"دەنێردرێت…","thanksTitle":"سوپاس، داواکاریت وەرگیرا.","thanksBody":"ڕوخاس بە زووترین کات پەیوەندیت پێوە دەکات.","requiredMsg":"تکایە ئەم خانەیە پڕ بکەرەوە.","numberMsg":"تکایە تەنها ژمارە بنووسە.","incompleteMsg":"هەندێک خانە پڕ نەکراونەتەوە. تکایە ئەو خانانەی بە سوور نیشان کراون پڕ بکەرەوە.","fileTypeMsg":"تەنها فایلی PDF، Word یان وێنە (JPG، PNG) وەردەگیرێت.","fileSizeMsg":"فایلەکە زۆر گەورەیە. قەبارەی فایل نابێت لە 5 مێگابایت زیاتر بێت.","fileFailMsg":"ببورە، فایلی سیڤییەکە وەرنەگیرا. تکایە فایلێکی تر هەڵبژێرە یان بەبێ سیڤی بینێرە.","failMsg":"ببورە، هەڵەیەک ڕوویدا و داواکارییەکە نەنێردرا. تکایە دووبارە هەوڵ بدەرەوە، یان پەیوەندی بکە بە 0750 600 3737.","timestamp":"بەروار و کات"},"title":"فۆڕمی داواکاریی کار","brand":"ڕوخاس","phone":"0750 600 3737","file":{"maxMb":5,"extensions":["pdf","doc","docx","jpg","jpeg","png"]},"endpoint":"https://script.google.com/macros/s/AKfycbwx_sDOkD_S4VN9VzsbL1Jvx_kzuI-2stPm3HNLDHvv7N19L5fKvupOutQXpXmuW5YM/exec"};
   var UI = CFG.ui;
 
   function el(tag, attrs, children) {
@@ -121,42 +141,55 @@
     (children || []).forEach(function (c) { if (c) e.appendChild(c); });
     return e;
   }
-  function labelNode(f) {
-    var k = el('span', { class: 'k', id: 'lbl-' + f.key, text: f.label });
-    if (f.required) k.appendChild(el('span', { class: 'req', text: ' *' }));
-    return k;
+  function mark(node, f) {
+    node.appendChild(f.optional ? el('span', { class: 'opt', text: ' (' + UI.optional + ')' }) : el('span', { class: 'req', text: ' *' }));
+    return node;
+  }
+  function fieldBox(f, wide, children) {
+    return el('div', { class: 'field' + (wide ? ' wide' : ''), 'data-key': f.key },
+      children.concat([f.hint ? el('div', { class: 'hint', text: f.hint }) : null, el('div', { class: 'err' })]));
   }
   function textField(f) {
     var type = f.type === 'tel' ? 'tel' : f.type === 'date' ? 'date' : 'text';
     var input = el('input', { type: type, name: f.key, id: 'in-' + f.key, autocomplete: 'off' });
     if (f.type === 'number') { input.setAttribute('inputmode', 'numeric'); }
     if (f.type === 'tel') { input.setAttribute('inputmode', 'tel'); }
-    var lbl = el('label', { class: 'k', for: 'in-' + f.key, text: f.label });
-    if (f.required) lbl.appendChild(el('span', { class: 'req', text: ' *' }));
-    return el('div', { class: 'field' + (f.wide ? ' wide' : ''), 'data-key': f.key }, [
-      lbl, input, f.hint ? el('div', { class: 'hint', text: f.hint }) : null, el('div', { class: 'err' }),
-    ]);
+    return fieldBox(f, f.wide, [mark(el('label', { class: 'k', for: 'in-' + f.key, text: f.label }), f), input]);
+  }
+  function fileField(f) {
+    var accept = CFG.file.extensions.map(function (x) { return '.' + x; }).join(',');
+    var input = el('input', { type: 'file', id: 'in-' + f.key, 'data-file': f.key, accept: accept });
+    return fieldBox(f, true, [mark(el('label', { class: 'k', for: 'in-' + f.key, text: f.label }), f), input]);
   }
   function choiceField(f) {
     var pills = el('div', { class: 'pills', role: 'radiogroup', 'aria-labelledby': 'lbl-' + f.key },
       f.options.map(function (opt) {
         return el('label', { class: 'pill' }, [el('input', { type: 'radio', name: f.key, value: opt }), el('span', { text: opt })]);
       }));
-    return el('div', { class: 'field' + (f.options.length > 2 ? ' wide' : ''), 'data-key': f.key }, [labelNode(f), pills, el('div', { class: 'err' })]);
+    return fieldBox(f, f.options.length > 2, [mark(el('span', { class: 'k', id: 'lbl-' + f.key, text: f.label }), f), pills]);
   }
   function gridField(f) {
     var thead = el('thead', {}, [el('tr', {}, [el('th', { text: '' })].concat(f.columns.map(function (c) { return el('th', { text: c }); })))]);
     var tbody = el('tbody', {}, f.rows.map(function (r) {
-      return el('tr', {}, [el('td', { text: r.label })].concat(f.columns.map(function (c) {
+      return el('tr', { 'data-row': r.key }, [mark(el('td', { text: r.label }), r)].concat(f.columns.map(function (c) {
         return el('td', {}, [el('input', { type: 'radio', name: r.key, value: c, 'aria-label': r.label + ' — ' + c })]);
       })));
     }));
-    return el('div', { class: 'field wide', 'data-key': f.key }, [el('table', { class: 'grid' }, [thead, tbody])]);
+    return fieldBox(f, true, [el('table', { class: 'grid' }, [thead, tbody])]);
+  }
+  function aboutCard() {
+    var a = UI.about;
+    var host = document.getElementById('about');
+    host.appendChild(el('h2', { text: a.rolesTitle }));
+    host.appendChild(el('ul', {}, a.roles.map(function (r) { return el('li', { text: r }); })));
+    host.appendChild(el('h2', { text: a.salaryTitle }));
+    host.appendChild(el('p', { text: a.salary }));
   }
   function render() {
     document.getElementById('title').textContent = CFG.title;
     ['brand', 'brandFoot'].forEach(function (id) { document.getElementById(id).textContent = CFG.brand; });
     ['phone', 'phoneFoot'].forEach(function (id) { document.getElementById(id).textContent = CFG.phone; });
+    aboutCard();
     document.getElementById('intro').textContent = UI.intro;
     document.getElementById('submitBtn').textContent = UI.submit;
     document.getElementById('thanksTitle').textContent = UI.thanksTitle;
@@ -164,73 +197,148 @@
     var host = document.getElementById('sections');
     CFG.sections.forEach(function (sec) {
       var fields = el('div', { class: 'fields' }, sec.fields.map(function (f) {
-        return f.type === 'grid' ? gridField(f) : f.type === 'choice' ? choiceField(f) : textField(f);
+        return f.type === 'grid' ? gridField(f) : f.type === 'choice' ? choiceField(f) : f.type === 'file' ? fileField(f) : textField(f);
       }));
-      host.appendChild(el('section', { class: 'card' }, [el('h2', { text: sec.title }), fields]));
+      var none = sec.none ? el('label', { class: 'none' }, [
+        el('input', { type: 'checkbox', name: sec.none.key, value: '1' }), el('span', { text: sec.none.label })]) : null;
+      host.appendChild(el('section', { class: 'card' }, [el('h2', { text: sec.title }), none, fields]));
     });
   }
 
+  var FORM = document.getElementById('form');
+  function eachField(fn) {
+    CFG.sections.forEach(function (sec) { sec.fields.forEach(function (f) { fn(f, sec); }); });
+  }
+  function box(key) { return document.querySelector('.field[data-key="' + key + '"]'); }
   function collect() {
     var data = {};
-    var fd = new FormData(document.getElementById('form'));
-    fd.forEach(function (v, k) { data[k] = v; });
+    new FormData(FORM).forEach(function (v, k) { if (typeof v === 'string') data[k] = v; });
     return data;
   }
+  function isSkipped(f, data) { return !!f.skipIf && (data[f.skipIf.key] || '') === f.skipIf.equals; }
+
+  /** Hides and disables the fields switched off by a "none" answer. A disabled
+   *  input is left out of the payload; the backend records the "none" word. */
+  function applySkips() {
+    CFG.sections.forEach(function (sec) {
+      if (!sec.none || !sec.none.implies) return;
+      if (FORM.elements[sec.none.key].checked) FORM.elements[sec.none.implies].checked = true;
+    });
+    var data = collect();
+    eachField(function (f) {
+      if (!f.skipIf) return;
+      var off = isSkipped(f, data);
+      var b = box(f.key);
+      b.classList.toggle('skipped', off);
+      if (off) b.classList.remove('invalid');
+      b.querySelectorAll('input').forEach(function (i) { i.disabled = off; });
+    });
+  }
+
+  function chosenFile(key) {
+    var input = document.querySelector('input[data-file="' + key + '"]');
+    return input && input.files && input.files[0] ? input.files[0] : null;
+  }
   function flag(key, msg) {
-    var box = document.querySelector('.field[data-key="' + key + '"]');
-    if (!box) return;
-    box.classList.add('invalid');
-    box.querySelector('.err').textContent = msg;
+    var b = box(key);
+    if (!b) return;
+    b.classList.add('invalid');
+    b.querySelector('.err').textContent = msg;
   }
   function validate(data) {
-    document.querySelectorAll('.field.invalid').forEach(function (b) { b.classList.remove('invalid'); });
+    document.querySelectorAll('.invalid').forEach(function (b) { b.classList.remove('invalid'); });
     var first = null;
-    CFG.sections.forEach(function (sec) {
-      sec.fields.forEach(function (f) {
-        if (f.type === 'grid') return;
+    eachField(function (f) {
+      var bad = null;
+      if (f.type === 'grid') {
+        f.rows.forEach(function (r) {
+          if (data[r.key]) return;
+          document.querySelector('tr[data-row="' + r.key + '"]').classList.add('invalid');
+          bad = UI.requiredMsg;
+        });
+      } else if (f.type === 'file') {
+        var file = chosenFile(f.key);
+        if (!file) { if (!f.optional) bad = UI.requiredMsg; }
+        else if (CFG.file.extensions.indexOf((file.name.split('.').pop() || '').toLowerCase()) < 0) bad = UI.fileTypeMsg;
+        else if (file.size > CFG.file.maxMb * 1024 * 1024) bad = UI.fileSizeMsg;
+      } else if (!isSkipped(f, data)) {
         var v = (data[f.key] || '').trim();
-        var bad = null;
-        if (f.required && !v) bad = UI.requiredMsg;
+        if (!f.optional && !v) bad = UI.requiredMsg;
         else if (f.type === 'number' && v && !/^[0-9٠-٩۰-۹,\s]{1,9}$/.test(v)) bad = UI.numberMsg;
-        if (bad) { flag(f.key, bad); first = first || f.key; }
-      });
+      }
+      if (bad) { flag(f.key, bad); first = first || f.key; }
     });
     return first;
   }
+  function readFile(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve({ name: file.name, data: String(reader.result).split(',')[1] || '' }); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+  function attachFiles(data) {
+    var jobs = [];
+    eachField(function (f) {
+      if (f.type !== 'file') return;
+      var file = chosenFile(f.key);
+      if (file) jobs.push(readFile(file).then(function (payload) { data[f.key] = payload; }));
+    });
+    return Promise.all(jobs).then(function () { return data; });
+  }
 
-  document.getElementById('form').addEventListener('submit', function (ev) {
+  // Answering a field clears its red state.
+  function onEdit(ev) {
+    var t = ev.target;
+    if (!t || !t.closest) return;
+    var tr = t.closest('tr.invalid');
+    if (tr) tr.classList.remove('invalid');
+    var b = t.closest('.field.invalid');
+    if (b && !b.querySelector('tr.invalid')) b.classList.remove('invalid');
+    if (ev.type === 'change') applySkips();
+  }
+  FORM.addEventListener('input', onEdit);
+  FORM.addEventListener('change', onEdit);
+
+  FORM.addEventListener('submit', function (ev) {
     ev.preventDefault();
+    applySkips();
     var data = collect();
     var firstBad = validate(data);
     var fail = document.getElementById('fail');
     fail.style.display = 'none';
     if (firstBad) {
-      document.querySelector('.field[data-key="' + firstBad + '"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      fail.textContent = UI.incompleteMsg; fail.style.display = 'block';
+      box(firstBad).scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
     var btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.textContent = UI.sending;
     var finish = function (res) {
       if (res && res.ok) {
-        document.getElementById('form').style.display = 'none';
+        FORM.style.display = 'none';
         document.getElementById('done').style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         btn.disabled = false; btn.textContent = UI.submit;
-        fail.textContent = UI.failMsg; fail.style.display = 'block';
+        fail.textContent = res && /^file:/.test(res.error || '') ? UI.fileFailMsg : UI.failMsg;
+        fail.style.display = 'block';
       }
     };
-    if (CFG.endpoint) {
-      // Static hosting: POST JSON as text/plain (no preflight) to the Apps Script web app.
-      fetch(CFG.endpoint, { method: 'POST', mode: 'cors', redirect: 'follow',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
-        .then(function (r) { return r.json(); }).then(finish).catch(function () { finish(null); });
-    } else {
-      google.script.run.withSuccessHandler(finish).withFailureHandler(function () { finish(null); }).submit(data);
-    }
+    attachFiles(data).then(function (payload) {
+      if (CFG.endpoint) {
+        // Static hosting: POST JSON as text/plain (no preflight) to the Apps Script web app.
+        return fetch(CFG.endpoint, { method: 'POST', mode: 'cors', redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+          .then(function (r) { return r.json(); }).then(finish);
+      }
+      google.script.run.withSuccessHandler(finish).withFailureHandler(function () { finish(null); }).submit(payload);
+    }).catch(function () { finish(null); });
   });
 
   render();
+  applySkips();
 </script>
 </body>
 </html>
