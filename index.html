@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>فۆڕمی داواکاریی کار — ڕوخاس</title>
+<meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
@@ -15,47 +16,69 @@
 <style>
   /* RUXAS tokens (studio/src/tokens.css) */
   :root {
-    --red: #CF2727; --red-700: #991B1B; --red-tint: #FEF2F2;
-    --charcoal: #111827; --ink: #030712; --muted: #6B7280; --border: #E5E7EB; --offwhite: #F9FAFB;
-    --success: #10B981; --error: #EF4444;
+    /* Light theme (default). Brand red and success green are the same in both themes. */
+    --red: #CF2727; --success: #10B981;
+    --bg: #F9FAFB; --surface: #FFFFFF; --text: #111827; --heading: #030712; --muted: #6B7280; --border: #E5E7EB;
+    --accent-text: #991B1B; --accent-tint: #FEF2F2; --mark: #CF2727; --error: #EF4444;
+    color-scheme: light;
     --stack: 'RX Arabic', 'Noto Sans Arabic', system-ui, sans-serif;
     --r-lg: 16px; --r-md: 12px; --r-sm: 8px;
   }
+  /* Dark theme. Automatic: follows the device setting. A visitor's own pick
+     (data-theme on <html>, set by the switch under the header) overrides it. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B0F17; --surface: #151B26; --text: #E5E7EB; --heading: #F9FAFB; --muted: #9CA3AF; --border: #2B3445;
+      --accent-text: #FCA5A5; --accent-tint: rgba(207, 39, 39, .18); --mark: #F87171; --error: #F87171;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+      --bg: #0B0F17; --surface: #151B26; --text: #E5E7EB; --heading: #F9FAFB; --muted: #9CA3AF; --border: #2B3445;
+      --accent-text: #FCA5A5; --accent-tint: rgba(207, 39, 39, .18); --mark: #F87171; --error: #F87171;
+      color-scheme: dark;
+  }
   * { box-sizing: border-box; }
   html { font-family: var(--stack); }
-  body { margin: 0; background: var(--offwhite); color: var(--charcoal); font-size: 16px; line-height: 1.7; direction: rtl; text-align: right; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; direction: rtl; text-align: right; }
   .wrap { max-width: 720px; margin: 0 auto; padding: 16px 16px 48px; }
 
   header.head { display: flex; align-items: center; gap: 14px; padding: 8px 0 14px; }
   .logo { width: 56px; height: 56px; flex: none; }
-  .head h1 { margin: 0; font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+  .head h1 { margin: 0; font-size: 22px; font-weight: 700; color: var(--heading); line-height: 1.3; }
   .brand-line { color: var(--muted); font-size: 14px; }
   .num { direction: ltr; unicode-bidi: isolate; }
   .bar { height: 4px; background: var(--red); border-radius: 2px; margin-bottom: 14px; }
-  .intro { margin: 0 0 16px; color: var(--charcoal); }
-  .req { color: var(--red); }
+  .intro { margin: 0 0 16px; color: var(--text); }
+  .req { color: var(--mark); }
+
+  .theme { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin: -4px 0 12px; font-size: 13px; color: var(--muted); }
+  .theme .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); padding: 2px; }
+  .theme button { font: inherit; font-size: 13px; color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 4px 12px; min-height: 30px; cursor: pointer; }
+  .theme button[aria-pressed="true"] { background: var(--accent-tint); color: var(--accent-text); font-weight: 700; }
+  .theme button:focus-visible { outline: 2px solid var(--red); outline-offset: 1px; }
   .opt { color: var(--muted); font-weight: 400; font-size: 13px; }
 
-  section.card.about { border-color: var(--red); background: var(--red-tint); }
+  section.card.about { border-color: var(--red); background: var(--accent-tint); }
   .card.about h2 { border-bottom: 0; padding-bottom: 0; margin-bottom: 6px; }
   .card.about h2:not(:first-child) { margin-top: 14px; }
   .about ul { margin: 0; padding: 0 20px 0 0; }
   .about p { margin: 0; }
 
-  section.card { background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; margin-bottom: 14px; }
-  .card h2 { margin: 0 0 12px; font-size: 17px; font-weight: 700; color: var(--red-700); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  section.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; margin-bottom: 14px; }
+  .card h2 { margin: 0 0 12px; font-size: 17px; font-weight: 700; color: var(--accent-text); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
   .fields { display: grid; grid-template-columns: 1fr; gap: 14px; }
   @media (min-width: 560px) { .fields { grid-template-columns: 1fr 1fr; } .field.wide { grid-column: 1 / -1; } }
 
-  .field label.k, .field .k { display: block; font-weight: 700; font-size: 15px; margin-bottom: 6px; color: var(--ink); }
+  .field label.k, .field .k { display: block; font-weight: 700; font-size: 15px; margin-bottom: 6px; color: var(--heading); }
   .hint { color: var(--muted); font-size: 13px; margin-top: 4px; }
   input[type=text], input[type=tel], input[type=date] {
-    width: 100%; font: inherit; color: var(--charcoal); background: #fff;
+    width: 100%; font: inherit; color: var(--text); background: var(--surface);
     border: 1px solid var(--border); border-radius: var(--r-sm); padding: 10px 12px; min-height: 46px;
   }
   input[type=date], input[inputmode=numeric], input[type=tel] { direction: ltr; text-align: left; }
   input:focus { outline: 2px solid var(--red); outline-offset: 1px; border-color: var(--red); }
-  input[type=file] { width: 100%; font: inherit; font-size: 14px; color: var(--charcoal); background: #fff;
+  input[type=file] { width: 100%; font: inherit; font-size: 14px; color: var(--text); background: var(--surface);
     border: 1px dashed var(--border); border-radius: var(--r-sm); padding: 10px 12px; min-height: 46px; }
   .field.skipped { display: none; }
   label.none { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-weight: 700; cursor: pointer; min-height: 44px; }
@@ -63,10 +86,10 @@
 
   /* Unfilled required fields after a submit attempt */
   .field.invalid input[type=text], .field.invalid input[type=tel], .field.invalid input[type=date], .field.invalid input[type=file] {
-    border-color: var(--error); box-shadow: 0 0 0 1px var(--error); background: var(--red-tint); }
-  .field.invalid .pills { border-color: var(--error); box-shadow: 0 0 0 1px var(--error); background: var(--red-tint); }
+    border-color: var(--error); box-shadow: 0 0 0 1px var(--error); background: var(--accent-tint); }
+  .field.invalid .pills { border-color: var(--error); box-shadow: 0 0 0 1px var(--error); background: var(--accent-tint); }
   .field.invalid label.k, .field.invalid .k { color: var(--error); }
-  .grid tr.invalid td { background: var(--red-tint); color: var(--error); }
+  .grid tr.invalid td { background: var(--accent-tint); color: var(--error); }
   .grid tr.invalid td:first-child { box-shadow: inset -3px 0 0 var(--error); }
   .err { display: none; color: var(--error); font-size: 13px; margin-top: 4px; }
   .field.invalid .err { display: block; }
@@ -74,8 +97,8 @@
   .pills { display: flex; flex-wrap: wrap; gap: 8px; border: 1px solid transparent; border-radius: var(--r-md); padding: 4px; margin: -4px; }
   .pill { position: relative; }
   .pill input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
-  .pill span { display: inline-block; padding: 9px 16px; border: 1px solid var(--border); border-radius: 999px; background: #fff; min-height: 44px; line-height: 24px; }
-  .pill input:checked + span { background: var(--red-tint); border-color: var(--red); color: var(--red-700); font-weight: 700; }
+  .pill span { display: inline-block; padding: 9px 16px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); min-height: 44px; line-height: 24px; }
+  .pill input:checked + span { background: var(--accent-tint); border-color: var(--red); color: var(--accent-text); font-weight: 700; }
   .pill input:focus-visible + span { outline: 2px solid var(--red); outline-offset: 1px; }
 
   table.grid { width: 100%; border-collapse: collapse; }
@@ -88,16 +111,20 @@
   button.submit { width: 100%; font: inherit; font-weight: 700; font-size: 18px; color: #fff; background: var(--red);
     border: 0; border-radius: var(--r-md); padding: 14px; min-height: 52px; cursor: pointer; }
   button.submit:disabled { opacity: .6; cursor: default; }
-  .fail { display: none; margin-top: 12px; font-weight: 700; padding: 12px 14px; background: #FEF2F2; border: 1px solid var(--error); border-radius: var(--r-sm); color: var(--red-700); }
+  .fail { display: none; margin-top: 12px; font-weight: 700; padding: 12px 14px; background: var(--accent-tint); border: 1px solid var(--error); border-radius: var(--r-sm); color: var(--accent-text); }
 
   .done { display: none; text-align: center; padding: 48px 16px; }
   .done .tick { width: 64px; height: 64px; border-radius: 50%; background: var(--success); color: #fff; font-size: 36px; line-height: 64px; margin: 0 auto 16px; }
-  .done h2 { margin: 0 0 6px; color: var(--ink); }
+  .done h2 { margin: 0 0 6px; color: var(--heading); }
   .done p { margin: 0; color: var(--muted); }
   /* Honeypot: clipped in place. An off-screen offset to the left makes a right-to-left page scroll sideways. */
   .hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   footer.foot { text-align: center; color: var(--muted); font-size: 13px; margin-top: 24px; }
 </style>
+<script>
+  // Apply a remembered theme pick before the first paint (no flash). No pick = follow the device.
+  try { var t = localStorage.getItem('rx-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -109,6 +136,7 @@
     </div>
   </header>
   <div class="bar"></div>
+  <div class="theme" id="theme"></div>
 
   <form id="form" novalidate>
     <section class="card about" id="about"></section>
@@ -131,7 +159,7 @@
 </div>
 
 <script>
-  var CFG = {"sections":[{"title":"کاری داواکراو","fields":[{"key":"position","label":"بۆ کام کار داواکاری دەکەیت؟","type":"multi","options":["پاککردنەوە","گواستنەوە","وەستای مۆبیلیات"],"late":true,"column":"کاری داواکراو","hint":"دەتوانیت لە یەک کار زیاتر هەڵبژێریت."}]},{"title":"زانیاری کەسی","fields":[{"key":"fullName","label":"ناوی تەواو","type":"text"},{"key":"gender","label":"ڕەگەز","type":"choice","options":["نێر","مێ"]},{"key":"dob","label":"بەرواری لەدایکبوون","type":"date"},{"key":"phone","label":"ژمارەی مۆبایل","type":"tel"},{"key":"phone2","label":"مۆبایلی دووەم","type":"tel","optional":true},{"key":"address","label":"ناونیشانی نیشتەجێبوون","type":"text","wide":true}]},{"title":"ژیان و تەندروستی","fields":[{"key":"marital","label":"باری خێزانی","type":"choice","options":["هاوسەردار","بێ هاوسەر"]},{"key":"familyMembers","label":"ژمارەی ئەندامانی خێزان","type":"number"},{"key":"financial","label":"باری دارایی","type":"choice","options":["زۆر باش","باش","لاواز"]},{"key":"residence","label":"جۆری نیشتەجێبوون","type":"choice","options":["بەکرێنشین","خاوەن موڵک"]},{"key":"vehicleOwner","label":"خاوەنی ئۆتۆمبێل","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"driverLicense","label":"مۆڵەتی شۆفێری هەیە","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"height","label":"باڵا (سم)","type":"number"},{"key":"weight","label":"کێش (کگ)","type":"number"},{"key":"glasses","label":"چاویلکە بەکاردەهێنێت","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"illness","label":"نەخۆشی / بارودۆخی تەندروستی","type":"text","wide":true,"hint":"ئەگەر هیچ نەخۆشییەکت نییە، بنووسە \"نییە\"."}]},{"title":"خوێندن","fields":[{"key":"degree","label":"بڕوانامە","type":"choice","options":["نییە","قوتابخانەی سەرەتایی","ئامادەیی","دیپلۆم","بەکالۆریۆس"]},{"key":"educationStage","label":"قۆناغی خوێندن","type":"text","skipIf":{"key":"degree","equals":"نییە"}},{"key":"graduationYear","label":"ساڵی دەرچوون","type":"number","skipIf":{"key":"degree","equals":"نییە"}},{"key":"schoolName","label":"ناوی قوتابخانە","type":"text","wide":true,"skipIf":{"key":"degree","equals":"نییە"}}]},{"title":"زمانەکان","fields":[{"key":"languages","label":"زمانەکان","type":"grid","columns":["زۆر باش","باش","لاواز"],"rows":[{"key":"langKurdish","label":"کوردی"},{"key":"langArabic","label":"عەرەبی"},{"key":"langEnglish","label":"ئینگلیزی"}]},{"key":"otherLanguages","label":"زمانەکانی تر","type":"text","wide":true,"hint":"ئەگەر هیچ زمانێکی تر نازانیت، بنووسە \"نییە\"."}]},{"title":"ئەزموونی کار ١","none":{"key":"exp1None","label":"ئەزموونی کارم نییە","implies":"exp2None"},"fields":[{"key":"exp1Title","label":"ناوی پیشە","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Company","label":"ناوی کۆمپانیا","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Duration","label":"ماوە","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Salary","label":"مووچە","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Reason","label":"هۆکاری بەجێهێشتن","type":"text","wide":true,"skipIf":{"key":"exp1None","equals":"1"}}]},{"title":"ئەزموونی کار ٢","none":{"key":"exp2None","label":"ئەزموونی کاری دووەمم نییە"},"fields":[{"key":"exp2Title","label":"ناوی پیشە","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Company","label":"ناوی کۆمپانیا","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Duration","label":"ماوە","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Salary","label":"مووچە","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Reason","label":"هۆکاری بەجێهێشتن","type":"text","wide":true,"skipIf":{"key":"exp2None","equals":"1"}}]},{"title":"زانیاریی کار","fields":[{"key":"startDate","label":"بەرواری دەستپێکردنی کار","type":"date"},{"key":"expectedSalary","label":"مووچەی چاوەڕوانکراو","type":"text"},{"key":"travelMethod","label":"ڕێگای هاتووچۆ","type":"text"},{"key":"travelCost","label":"تێچووی هاتووچۆ","type":"text"}]},{"title":"سیڤی","fields":[{"key":"cv","label":"هاوپێچکردنی سیڤی","type":"file","optional":true,"wide":true,"late":true,"column":"سیڤی","hint":"ئەگەر سیڤیت هەیە، لێرە هاوپێچی بکە — PDF، Word یان وێنە، تا 5 مێگابایت."}]}],"ui":{"about":{"rolesTitle":"ئەم هەلی کارە بۆ کێیە؟","roles":["کارمەندی پاککردنەوە و گواستنەوە","وەستای شارەزا لە هەڵوەشاندن و بەستنەوەی مۆبیلیاتی ماڵ و ئۆفیس"],"salaryTitle":"مووچە","salary":"مووچە لە 500,000 دیناری عێراقی دەست پێدەکات و بەپێی لێهاتوویی و توانای هەر کەسێک زیاد دەکات. مووچەی وەستا شارەزاکان بەپێی شارەزایی و تواناکانیان دیاری دەکرێت."},"intro":"تکایە هەموو خانەکان پڕ بکەرەوە. هەموویان پێویستن، تەنها مۆبایلی دووەم نەبێت. ئەگەر خانەیەک بۆ تۆ ناگونجێت، بنووسە \"نییە\".","optional":"ئارەزوومەندانە","submit":"ناردن","sending":"دەنێردرێت…","thanksTitle":"سوپاس، داواکاریت وەرگیرا.","thanksBody":"ڕوخاس بە زووترین کات پەیوەندیت پێوە دەکات.","requiredMsg":"تکایە ئەم خانەیە پڕ بکەرەوە.","numberMsg":"تکایە تەنها ژمارە بنووسە.","incompleteMsg":"هەندێک خانە پڕ نەکراونەتەوە. تکایە ئەو خانانەی بە سوور نیشان کراون پڕ بکەرەوە.","fileTypeMsg":"تەنها فایلی PDF، Word یان وێنە (JPG، PNG) وەردەگیرێت.","fileSizeMsg":"فایلەکە زۆر گەورەیە. قەبارەی فایل نابێت لە 5 مێگابایت زیاتر بێت.","fileFailMsg":"ببورە، فایلی سیڤییەکە وەرنەگیرا. تکایە فایلێکی تر هەڵبژێرە یان بەبێ سیڤی بینێرە.","failMsg":"ببورە، هەڵەیەک ڕوویدا و داواکارییەکە نەنێردرا. تکایە دووبارە هەوڵ بدەرەوە، یان پەیوەندی بکە بە 0750 600 3737.","timestamp":"بەروار و کات"},"title":"فۆڕمی داواکاریی کار","brand":"ڕوخاس","phone":"0750 600 3737","file":{"maxMb":5,"extensions":["pdf","doc","docx","jpg","jpeg","png"]},"endpoint":"https://script.google.com/macros/s/AKfycbwx_sDOkD_S4VN9VzsbL1Jvx_kzuI-2stPm3HNLDHvv7N19L5fKvupOutQXpXmuW5YM/exec"};
+  var CFG = {"sections":[{"title":"کاری داواکراو","fields":[{"key":"position","label":"بۆ کام کار داواکاری دەکەیت؟","type":"multi","options":["پاککردنەوە","گواستنەوە","وەستای مۆبیلیات"],"late":true,"column":"کاری داواکراو","hint":"دەتوانیت لە یەک کار زیاتر هەڵبژێریت."}]},{"title":"زانیاری کەسی","fields":[{"key":"fullName","label":"ناوی تەواو","type":"text"},{"key":"gender","label":"ڕەگەز","type":"choice","options":["نێر","مێ"]},{"key":"dob","label":"بەرواری لەدایکبوون","type":"date"},{"key":"phone","label":"ژمارەی مۆبایل","type":"tel"},{"key":"phone2","label":"مۆبایلی دووەم","type":"tel","optional":true},{"key":"address","label":"ناونیشانی نیشتەجێبوون","type":"text","wide":true}]},{"title":"ژیان و تەندروستی","fields":[{"key":"marital","label":"باری خێزانی","type":"choice","options":["هاوسەردار","بێ هاوسەر"]},{"key":"familyMembers","label":"ژمارەی ئەندامانی خێزان","type":"number"},{"key":"financial","label":"باری دارایی","type":"choice","options":["زۆر باش","باش","لاواز"]},{"key":"residence","label":"جۆری نیشتەجێبوون","type":"choice","options":["بەکرێنشین","خاوەن موڵک"]},{"key":"vehicleOwner","label":"خاوەنی ئۆتۆمبێل","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"driverLicense","label":"مۆڵەتی شۆفێری هەیە","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"height","label":"باڵا (سم)","type":"number"},{"key":"weight","label":"کێش (کگ)","type":"number"},{"key":"glasses","label":"چاویلکە بەکاردەهێنێت","type":"choice","options":["بەڵێ","نەخێر"]},{"key":"illness","label":"نەخۆشی / بارودۆخی تەندروستی","type":"text","wide":true,"hint":"ئەگەر هیچ نەخۆشییەکت نییە، بنووسە \"نییە\"."}]},{"title":"خوێندن","fields":[{"key":"degree","label":"بڕوانامە","type":"choice","options":["نییە","قوتابخانەی سەرەتایی","ئامادەیی","دیپلۆم","بەکالۆریۆس"]},{"key":"educationStage","label":"قۆناغی خوێندن","type":"text","skipIf":{"key":"degree","equals":"نییە"}},{"key":"graduationYear","label":"ساڵی دەرچوون","type":"number","skipIf":{"key":"degree","equals":"نییە"}},{"key":"schoolName","label":"ناوی قوتابخانە","type":"text","wide":true,"skipIf":{"key":"degree","equals":"نییە"}}]},{"title":"زمانەکان","fields":[{"key":"languages","label":"زمانەکان","type":"grid","columns":["زۆر باش","باش","لاواز"],"rows":[{"key":"langKurdish","label":"کوردی"},{"key":"langArabic","label":"عەرەبی"},{"key":"langEnglish","label":"ئینگلیزی"}]},{"key":"otherLanguages","label":"زمانەکانی تر","type":"text","wide":true,"hint":"ئەگەر هیچ زمانێکی تر نازانیت، بنووسە \"نییە\"."}]},{"title":"ئەزموونی کار ١","none":{"key":"exp1None","label":"ئەزموونی کارم نییە","implies":"exp2None"},"fields":[{"key":"exp1Title","label":"ناوی پیشە","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Company","label":"ناوی کۆمپانیا","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Duration","label":"ماوە","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Salary","label":"مووچە","type":"text","skipIf":{"key":"exp1None","equals":"1"}},{"key":"exp1Reason","label":"هۆکاری بەجێهێشتن","type":"text","wide":true,"skipIf":{"key":"exp1None","equals":"1"}}]},{"title":"ئەزموونی کار ٢","none":{"key":"exp2None","label":"ئەزموونی کاری دووەمم نییە"},"fields":[{"key":"exp2Title","label":"ناوی پیشە","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Company","label":"ناوی کۆمپانیا","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Duration","label":"ماوە","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Salary","label":"مووچە","type":"text","skipIf":{"key":"exp2None","equals":"1"}},{"key":"exp2Reason","label":"هۆکاری بەجێهێشتن","type":"text","wide":true,"skipIf":{"key":"exp2None","equals":"1"}}]},{"title":"زانیاریی کار","fields":[{"key":"startDate","label":"بەرواری دەستپێکردنی کار","type":"date"},{"key":"expectedSalary","label":"مووچەی چاوەڕوانکراو","type":"text"},{"key":"travelMethod","label":"ڕێگای هاتووچۆ","type":"text"},{"key":"travelCost","label":"تێچووی هاتووچۆ","type":"text"}]},{"title":"سیڤی","fields":[{"key":"cv","label":"هاوپێچکردنی سیڤی","type":"file","optional":true,"wide":true,"late":true,"column":"سیڤی","hint":"ئەگەر سیڤیت هەیە، لێرە هاوپێچی بکە — PDF، Word یان وێنە، تا 5 مێگابایت."}]}],"ui":{"about":{"rolesTitle":"ئەم هەلی کارە بۆ کێیە؟","roles":["کارمەندی پاککردنەوە و گواستنەوە","وەستای شارەزا لە هەڵوەشاندن و بەستنەوەی مۆبیلیاتی ماڵ و ئۆفیس"],"salaryTitle":"مووچە","salary":"مووچە لە 500,000 دیناری عێراقی دەست پێدەکات و بەپێی لێهاتوویی و توانای هەر کەسێک زیاد دەکات. مووچەی وەستا شارەزاکان بەپێی شارەزایی و تواناکانیان دیاری دەکرێت."},"intro":"تکایە هەموو خانەکان پڕ بکەرەوە. هەموویان پێویستن، تەنها مۆبایلی دووەم نەبێت. ئەگەر خانەیەک بۆ تۆ ناگونجێت، بنووسە \"نییە\".","optional":"ئارەزوومەندانە","theme":{"label":"ڕووکار","auto":"خۆکار","light":"ڕووناک","dark":"تاریک"},"submit":"ناردن","sending":"دەنێردرێت…","thanksTitle":"سوپاس، داواکاریت وەرگیرا.","thanksBody":"ڕوخاس بە زووترین کات پەیوەندیت پێوە دەکات.","requiredMsg":"تکایە ئەم خانەیە پڕ بکەرەوە.","numberMsg":"تکایە تەنها ژمارە بنووسە.","incompleteMsg":"هەندێک خانە پڕ نەکراونەتەوە. تکایە ئەو خانانەی بە سوور نیشان کراون پڕ بکەرەوە.","fileTypeMsg":"تەنها فایلی PDF، Word یان وێنە (JPG، PNG) وەردەگیرێت.","fileSizeMsg":"فایلەکە زۆر گەورەیە. قەبارەی فایل نابێت لە 5 مێگابایت زیاتر بێت.","fileFailMsg":"ببورە، فایلی سیڤییەکە وەرنەگیرا. تکایە فایلێکی تر هەڵبژێرە یان بەبێ سیڤی بینێرە.","failMsg":"ببورە، هەڵەیەک ڕوویدا و داواکارییەکە نەنێردرا. تکایە دووبارە هەوڵ بدەرەوە، یان پەیوەندی بکە بە 0750 600 3737.","timestamp":"بەروار و کات"},"title":"فۆڕمی داواکاریی کار","brand":"ڕوخاس","phone":"0750 600 3737","file":{"maxMb":5,"extensions":["pdf","doc","docx","jpg","jpeg","png"]},"endpoint":"https://script.google.com/macros/s/AKfycbwx_sDOkD_S4VN9VzsbL1Jvx_kzuI-2stPm3HNLDHvv7N19L5fKvupOutQXpXmuW5YM/exec"};
   var UI = CFG.ui;
 
   function el(tag, attrs, children) {
@@ -179,6 +207,30 @@
     }));
     return fieldBox(f, true, [el('table', { class: 'grid' }, [thead, tbody])]);
   }
+  // Theme: 'auto' follows the device; a manual pick is remembered on this device.
+  var THEME_KEY = 'rx-theme';
+  function storedTheme() {
+    try { var t = localStorage.getItem(THEME_KEY); return t === 'light' || t === 'dark' ? t : 'auto'; } catch (e) { return 'auto'; }
+  }
+  function setTheme(t) {
+    if (t === 'auto') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', t);
+    try { if (t === 'auto') localStorage.removeItem(THEME_KEY); else localStorage.setItem(THEME_KEY, t); } catch (e) { /* storage blocked: the pick lasts for this visit */ }
+    document.querySelectorAll('#theme button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-theme-pick') === t));
+    });
+  }
+  function themeSwitch() {
+    var seg = el('div', { class: 'seg', role: 'group', 'aria-label': UI.theme.label }, ['auto', 'light', 'dark'].map(function (t) {
+      var b = el('button', { type: 'button', 'data-theme-pick': t, text: UI.theme[t] });
+      b.addEventListener('click', function () { setTheme(t); });
+      return b;
+    }));
+    var host = document.getElementById('theme');
+    host.appendChild(el('span', { text: UI.theme.label }));
+    host.appendChild(seg);
+    setTheme(storedTheme());
+  }
   function aboutCard() {
     var a = UI.about;
     var host = document.getElementById('about');
@@ -191,6 +243,7 @@
     document.getElementById('title').textContent = CFG.title;
     ['brand', 'brandFoot'].forEach(function (id) { document.getElementById(id).textContent = CFG.brand; });
     ['phone', 'phoneFoot'].forEach(function (id) { document.getElementById(id).textContent = CFG.phone; });
+    themeSwitch();
     aboutCard();
     document.getElementById('intro').textContent = UI.intro;
     document.getElementById('submitBtn').textContent = UI.submit;
